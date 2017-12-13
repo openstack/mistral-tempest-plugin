@@ -1,0 +1,73 @@
+- job:
+    name: mistral-devstack-tempest-base
+    parent: devstack-tempest
+    pre-run: playbooks/tempest/pre.yaml
+    timeout: 9000
+    required-projects:
+      - openstack-dev/devstack
+      - openstack-infra/devstack-gate
+      - openstack/heat
+      - openstack/mistral
+      - openstack/mistral-lib
+      - openstack/mistral-tempest-plugin
+      - openstack/python-mistralclient
+      - openstack/tempest
+      - openstack/zaqar
+      - openstack/python-zaqarclient
+    vars:
+      tox_envlist: all
+      tempest_test_regex: mistral
+      devstack_localrc:
+        TEMPEST_PLUGINS: "'{{ ansible_user_dir }}/src/git.openstack.org/openstack/mistral-tempest-plugin'"
+        SWIFT_HASH: secrethash
+        MYSQL_ROOT_PW: secretdatabase
+        MISTRAL_USE_MOD_WSGI: True
+        MISTRAL_RPC_IMPLEMENTATION: oslo
+      devstack_services:
+        heat: True
+        h-api: True
+        h-api-cfn: True
+        h-api-cw: True
+        h-eng: True
+        s-proxy: True
+        s-object: True
+        s-container: True
+        s-account: True
+        tempest: True
+      devstack_plugins:
+        mistral: https://git.openstack.org/openstack/mistral
+        heat: https://git.openstack.org/openstack/heat
+        zaqar: https://git.openstack.org/openstack/zaqar
+
+- job:
+    name: mistral-devstack
+    parent: mistral-devstack-tempest-base
+
+- job:
+    name: mistral-devstack-kombu
+    parent: mistral-devstack-tempest-base
+    vars:
+      devstack_localrc:
+        MISTRAL_RPC_IMPLEMENTATION: kombu
+
+- job:
+    name: mistral-devstack-non-apache
+    parent: mistral-devstack-tempest-base
+    vars:
+      devstack_localrc:
+        MISTRAL_USE_MOD_WSGI: False
+
+- project:
+    name: openstack/mistral-tempest-plugin
+    check:
+      jobs:
+        - mistral-devstack
+        - mistral-devstack-non-apache:
+            branches: ^(?!stable/(newton|ocata)).*$
+        - mistral-devstack-kombu:
+            branches: ^(?!stable/newton).*$
+    gate:
+      jobs:
+        - mistral-devstack
+        - mistral-devstack-non-apache
+        - mistral-devstack-kombu
