@@ -24,11 +24,10 @@ class OpenStackActionsTestsV2(base.TestCase):
     # TODO(akuznetsova): add checks for task result after task_output
     # TODO(akuznetsova): refactoring will be finished
 
-    @classmethod
-    def resource_setup(cls):
-        super(OpenStackActionsTestsV2, cls).resource_setup()
+    def setUp(self):
+        super(OpenStackActionsTestsV2, self).setUp()
 
-        _, cls.wb = cls.client.create_workbook(
+        _, self.wb = self.client.create_workbook(
             'openstack/action_collection_wb.yaml')
 
     @decorators.attr(type='openstack')
