@@ -25,10 +25,6 @@ from mistral_tempest_tests.tests import base
 class MultiVimActionsTests(base.TestCase):
     _service = 'workflowv2'
 
-    @classmethod
-    def resource_setup(cls):
-        super(MultiVimActionsTests, cls).resource_setup()
-
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('dadc9960-9c03-41a9-9a9d-7e97d527e6dd')
     def test_multi_vim_support_target_headers(self):

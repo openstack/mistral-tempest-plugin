@@ -28,22 +28,20 @@ LOG = logging.getLogger(__name__)
 class ActionExecutionTestsV2(base.TestCase):
     _service = 'workflowv2'
 
-    @classmethod
-    def resource_setup(cls):
-        super(ActionExecutionTestsV2, cls).resource_setup()
+    def setUp(self):
+        super(ActionExecutionTestsV2, self).setUp()
 
-        cls.client.create_action_execution(
+        self.client.create_action_execution(
             {
                 'name': 'std.echo',
                 'input': '{"output": "Hello, Mistral!"}'
             }
         )
 
-    @classmethod
-    def resource_cleanup(cls):
-        for action_ex in cls.client.action_executions:
+    def tearDown(self):
+        for action_ex in self.client.action_executions:
             try:
-                cls.client.delete_obj('action_executions', action_ex)
+                self.client.delete_obj('action_executions', action_ex)
             except Exception as e:
                 LOG.exception(
                     'Exception raised when deleting '
@@ -51,9 +49,9 @@ class ActionExecutionTestsV2(base.TestCase):
                     action_ex, six.text_type(e)
                 )
 
-        cls.client.action_executions = []
+        self.client.action_executions = []
 
-        super(ActionExecutionTestsV2, cls).resource_cleanup()
+        super(ActionExecutionTestsV2, self).tearDown()
 
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('a72603bd-5d49-4d92-9747-8da6322e867d')

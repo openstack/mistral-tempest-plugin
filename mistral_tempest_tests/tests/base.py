@@ -34,31 +34,30 @@ class TestCase(test.BaseTestCase):
         if not CONF.service_available.mistral:
             raise cls.skipException("Mistral support is required.")
 
-    @classmethod
-    def resource_setup(cls):
+    def setUp(self):
         """Client authentication.
 
         This method allows to initialize authentication before
         each test case and define parameters of Mistral API Service.
         """
-        super(TestCase, cls).resource_setup()
+        super(TestCase, self).setUp()
 
         if 'WITHOUT_AUTH' in os.environ:
-            cls.mgr = mock.MagicMock()
-            cls.mgr.auth_provider = service_base.AuthProv()
-            cls.admin_mgr = cls.alt_mgr = cls.mgr
+            self.mgr = mock.MagicMock()
+            self.mgr.auth_provider = service_base.AuthProv()
+            self.admin_mgr = self.alt_mgr = self.mgr
         else:
-            cls.admin_mgr = cls.os_admin
-            cls.mgr = cls.os_primary
-            cls.alt_mgr = cls.os_alt
+            self.admin_mgr = self.os_admin
+            self.mgr = self.os_primary
+            self.alt_mgr = self.os_alt
 
-        if cls._service == 'workflowv2':
-            cls.admin_client = mistral_client.MistralClientV2(
-                cls.admin_mgr.auth_provider, cls._service)
-            cls.client = mistral_client.MistralClientV2(
-                cls.mgr.auth_provider, cls._service)
-            cls.alt_client = mistral_client.MistralClientV2(
-                cls.alt_mgr.auth_provider, cls._service)
+        if self._service == 'workflowv2':
+            self.admin_client = mistral_client.MistralClientV2(
+                self.admin_mgr.auth_provider, self._service)
+            self.client = mistral_client.MistralClientV2(
+                self.mgr.auth_provider, self._service)
+            self.alt_client = mistral_client.MistralClientV2(
+                self.alt_mgr.auth_provider, self._service)
 
     def tearDown(self):
         super(TestCase, self).tearDown()
@@ -70,12 +69,12 @@ class TestCase(test.BaseTestCase):
 
 
 class TestCaseAdvanced(TestCase):
-    @classmethod
-    def resource_setup(cls):
-        super(TestCaseAdvanced, cls).resource_setup()
 
-        cls.image_ref = CONF.compute.image_ref
-        cls.flavor_ref = CONF.compute.flavor_ref
+    def setUp(self):
+        super(TestCaseAdvanced, self).setUp()
+
+        self.image_ref = CONF.compute.image_ref
+        self.flavor_ref = CONF.compute.flavor_ref
 
     def tearDown(self):
         for wb in self.client.workbooks:
