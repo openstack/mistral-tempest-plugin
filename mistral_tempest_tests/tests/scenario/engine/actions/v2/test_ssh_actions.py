@@ -244,7 +244,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
             'cmd': 'hostname',
             'host': self.public_vm_ip,
             'username': CONF.validation.image_ssh_user,
-            'private_key_filename': self.key_name
+            'private_key_filename': self.key_dir + self.key_name
         }
 
         resp, body = self.client.create_action_execution(
@@ -270,7 +270,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
             'cmd': 'hostname',
             'host': guest_vm_ip,
             'username': CONF.validation.image_ssh_user,
-            'private_key_filename': self.key_name,
+            'private_key_filename': self.key_dir + self.key_name,
             'gateway_host': self.public_vm_ip,
             'gateway_username': CONF.validation.image_ssh_user
         }
