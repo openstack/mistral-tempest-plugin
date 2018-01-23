@@ -157,24 +157,17 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         self.private_key, self.public_key = utils.generate_key_pair()
         self.key_name = 'mistral-functional-tests-key'
 
-        # If ZUUL_PROJECT is specified, it means
-        # tests are running on Jenkins gate.
+        self.key_dir = SSH_KEYS_DIRECTORY
 
-        if os.environ.get('ZUUL_PROJECT'):
-            self.key_dir = "/opt/stack/new/.ssh/"
-
-            if not path.exists(self.key_dir):
-                os.mkdir(self.key_dir)
-        else:
-            self.key_dir = SSH_KEYS_DIRECTORY
+        self.key_path = self.key_dir + self.key_name
 
         utils.save_text_to(
             self.private_key,
-            self.key_dir + self.key_name,
+            self.key_path,
             overwrite=True
         )
 
-        LOG.info("Private key saved to %s", self.key_dir + self.key_name)
+        LOG.info("Private key saved to %s", self.key_path)
 
         # Create keypair in nova.
         self.mgr.keypairs_client.create_keypair(
@@ -233,7 +226,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         mgr.compute_security_group_rules_client.delete_security_group_rule(
             self.ssh_rule_id
         )
-        os.remove(self.key_dir + self.key_name)
+        os.remove(self.key_path)
 
         super(SSHActionsTestsV2, self).tearDown()
 
@@ -244,7 +237,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
             'cmd': 'hostname',
             'host': self.public_vm_ip,
             'username': CONF.validation.image_ssh_user,
-            'private_key_filename': self.key_dir + self.key_name
+            'private_key_filename': self.key_path
         }
 
         resp, body = self.client.create_action_execution(
@@ -270,7 +263,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
             'cmd': 'hostname',
             'host': guest_vm_ip,
             'username': CONF.validation.image_ssh_user,
-            'private_key_filename': self.key_dir + self.key_name,
+            'private_key_filename': self.key_path,
             'gateway_host': self.public_vm_ip,
             'gateway_username': CONF.validation.image_ssh_user
         }
