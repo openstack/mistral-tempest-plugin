@@ -1,0 +1,10 @@
+- hosts: tempest
+  tasks:
+    - name: Create .ssh dir and make it available to stack and tempest user
+      file:
+        path: /home/tempest/.ssh
+        state: directory
+        mode: u=rwx,g=rwx,o=rx,g+s
+        owner: tempest
+        group: stack
+      become: yes
