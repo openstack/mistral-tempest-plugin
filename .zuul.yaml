@@ -65,8 +65,10 @@
             branches: ^(?!stable/(newton|ocata)).*$
         - mistral-devstack-kombu:
             branches: ^(?!stable/newton).*$
+        - build-openstack-sphinx-docs
     gate:
       jobs:
         - mistral-devstack
         - mistral-devstack-non-apache
         - mistral-devstack-kombu
+        - build-openstack-sphinx-docs
