@@ -36,7 +36,7 @@ class TasksTestsV2(base.TestCase):
         self.client.workflows = []
 
         for wf in self.client.executions:
-            self.client.delete_obj('executions', wf)
+            self.client.delete_obj('executions', wf, force=True)
         self.client.executions = []
 
         super(TasksTestsV2, self).tearDown()

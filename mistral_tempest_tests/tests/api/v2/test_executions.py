@@ -44,7 +44,7 @@ class ExecutionTestsV2(base.TestCase):
         self.client.workflows = []
 
         for ex in self.client.executions:
-            self.client.delete_obj('executions', ex)
+            self.client.delete_obj('executions', ex, force=True)
         self.client.executions = []
 
         super(ExecutionTestsV2, self).tearDown()
@@ -317,7 +317,11 @@ class ExecutionTestsV2(base.TestCase):
     def test_delete_execution_by_admin(self):
         _, body = self.client.create_execution(self.direct_wf_id)
         exec_id = body['id']
-        resp, _ = self.admin_client.delete_obj('executions', exec_id)
+        resp, _ = self.admin_client.delete_obj(
+            'executions',
+            exec_id,
+            force=True
+        )
 
         self.assertEqual(204, resp.status)
 

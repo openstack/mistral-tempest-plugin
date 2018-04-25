@@ -83,7 +83,7 @@ class TestCaseAdvanced(TestCase):
         self.client.workbooks = []
 
         for ex in self.client.executions:
-            self.client.delete_obj('executions', ex)
+            self.client.delete_obj('executions', ex, force=True)
 
         self.client.executions = []
 
