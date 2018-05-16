@@ -81,11 +81,16 @@ class MistralClientBase(rest_client.RestClient):
 
     def delete_obj(self, obj, name, force=None):
         if force:
-            return self.delete('{obj}/{name}?force={force}'.format(
-                obj=obj,
-                name=name,
-                force=bool(force))
-            )
+            # TODO(apetrich) This try except is a partial implementation
+            # to be removed once force deletion lands in mistral
+            try:
+                return self.delete('{obj}/{name}?force={force}'.format(
+                    obj=obj,
+                    name=name,
+                    force=bool(force))
+                )
+            except Exception:
+                pass
 
         return self.delete('{obj}/{name}'.format(obj=obj, name=name))
 
