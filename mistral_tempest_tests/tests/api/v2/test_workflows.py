@@ -27,7 +27,11 @@ class WorkflowTestsV2(base.TestCase):
 
     def tearDown(self):
         for wf in self.client.workflows:
-            self.client.delete_obj('workflows', wf)
+            try:
+                self.client.delete_obj('workflows', wf)
+            except exceptions.NotFound:
+                pass
+
         self.client.workflows = []
 
         super(WorkflowTestsV2, self).tearDown()
@@ -211,7 +215,6 @@ class WorkflowTestsV2(base.TestCase):
         self.assertIn(name, names)
 
         self.client.delete_obj('workflows', name)
-        self.client.workflows.remove(name)
 
         _, body = self.client.get_list_obj('workflows')
 

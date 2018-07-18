@@ -69,7 +69,7 @@ class MistralClientV2(base.MistralClientBase):
 
         for wf in wfs['workflows']:
             if wf['name'].startswith(wb_name):
-                self.workflows.append(wf['name'])
+                self.workflows.append(wf['id'])
 
         return resp, json.loads(body)
 
@@ -85,8 +85,7 @@ class MistralClientV2(base.MistralClientBase):
         resp, body = self.post_request(url_path, yaml_file)
 
         for wf in json.loads(body)['workflows']:
-            identifier = wf['id'] if namespace else wf['name']
-            self.workflows.append(identifier)
+            self.workflows.append(wf['id'])
 
         return resp, json.loads(body)
 
