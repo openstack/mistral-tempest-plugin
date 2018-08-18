@@ -21,19 +21,19 @@
         TEMPEST_PLUGINS: "'{{ ansible_user_dir }}/src/git.openstack.org/openstack/mistral-tempest-plugin'"
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
-        MISTRAL_USE_MOD_WSGI: True
+        MISTRAL_USE_MOD_WSGI: true
         MISTRAL_RPC_IMPLEMENTATION: oslo
       devstack_services:
-        heat: True
-        h-api: True
-        h-api-cfn: True
-        h-api-cw: True
-        h-eng: True
-        s-proxy: True
-        s-object: True
-        s-container: True
-        s-account: True
-        tempest: True
+        heat: true
+        h-api: true
+        h-api-cfn: true
+        h-api-cw: true
+        h-eng: true
+        s-proxy: true
+        s-object: true
+        s-container: true
+        s-account: true
+        tempest: true
       devstack_plugins:
         mistral: https://git.openstack.org/openstack/mistral
         heat: https://git.openstack.org/openstack/heat
@@ -55,9 +55,12 @@
     parent: mistral-devstack-tempest-base
     vars:
       devstack_localrc:
-        MISTRAL_USE_MOD_WSGI: False
+        MISTRAL_USE_MOD_WSGI: false
 
 - project:
+    templates:
+      - check-requirements
+      - tempest-plugin-jobs
     check:
       jobs:
         - mistral-devstack
@@ -67,6 +70,7 @@
             branches: ^(?!stable/newton).*$
         - build-openstack-sphinx-docs
     gate:
+      queue: mistral
       jobs:
         - mistral-devstack
         - mistral-devstack-non-apache
