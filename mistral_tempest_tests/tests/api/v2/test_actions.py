@@ -165,10 +165,11 @@ class ActionTestsV2(base.TestCase):
         _, body = self.client.get_object('actions', created_acts[0])
         time = body['created_at']
         resp, body = self.client.get_list_obj(
-            'actions?created_at=in:' + time.replace(' ', '%20'))
+            'actions?sort_keys=name&created_at=in:' + time.replace(' ', '%20'))
 
         self.assertEqual(200, resp.status)
         action_names = [action['name'] for action in body['actions']]
+        created_acts.sort()
         self.assertListEqual(created_acts, action_names)
 
     @decorators.attr(type='smoke')
