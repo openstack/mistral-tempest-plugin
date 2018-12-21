@@ -8,5 +8,6 @@ It contains the tempest plugin for the functional testing of Mistral Project.
 
 * Free software: Apache license
 * Documentation: https://docs.openstack.org/mistral/latest
+* Release notes: https://docs.openstack.org/releasenotes/mistral/
 * Source: https://git.openstack.org/cgit/openstack/mistral-tempest-plugin
 * Bugs: https://bugs.launchpad.net/mistral
