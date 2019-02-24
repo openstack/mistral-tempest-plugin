@@ -12,12 +12,12 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-import json
 import os
 from os import path
 import time
 
 from oslo_log import log as logging
+from oslo_serialization import jsonutils
 from paramiko import ssh_exception
 from tempest import config
 from tempest.lib import decorators
@@ -243,13 +243,13 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         resp, body = self.client.create_action_execution(
             {
                 'name': 'std.ssh',
-                'input': json.dumps(input_data)
+                'input': jsonutils.dump_as_bytes(input_data)
             }
         )
 
         self.assertEqual(201, resp.status)
 
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
 
         self.assertIn(self.public_vm['name'], output['result'])
 
@@ -271,12 +271,12 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         resp, body = self.client.create_action_execution(
             {
                 'name': 'std.ssh_proxied',
-                'input': json.dumps(input_data)
+                'input': jsonutils.dump_as_bytes(input_data)
             }
         )
 
         self.assertEqual(201, resp.status)
 
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
 
         self.assertIn(self.guest_vm['name'], output['result'])

@@ -12,10 +12,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import json
 import six
 
 from oslo_log import log as logging
+from oslo_serialization import jsonutils
 from tempest.lib import decorators
 from tempest.lib import exceptions
 
@@ -64,7 +64,7 @@ class ActionExecutionTestsV2(base.TestCase):
         )
 
         self.assertEqual(201, resp.status)
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
         self.assertDictEqual(
             {'result': 'Hello, Mistral!'},
             output
@@ -137,7 +137,7 @@ class ActionExecutionTestsV2(base.TestCase):
         )
 
         self.assertEqual(201, resp.status)
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
         self.assertTrue(output['result']['status'] in range(200, 307))
 
     @decorators.attr(type='sanity')
@@ -151,7 +151,7 @@ class ActionExecutionTestsV2(base.TestCase):
         )
 
         self.assertEqual(201, resp.status)
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
         self.assertEqual(404, output['result']['status'])
 
     @decorators.attr(type='sanity')
@@ -167,7 +167,7 @@ class ActionExecutionTestsV2(base.TestCase):
         )
 
         self.assertEqual(201, resp.status)
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
         self.assertEqual(200, output['result']['status'])
 
     @decorators.attr(type='sanity')
@@ -190,7 +190,7 @@ class ActionExecutionTestsV2(base.TestCase):
             body,
             url='action_executions'
         )
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
 
         self.assertEqual('SUCCESS', body['state'])
         self.assertDictEqual(
@@ -219,7 +219,7 @@ class ActionExecutionTestsV2(base.TestCase):
         )
 
         self.assertEqual(201, resp.status)
-        output = json.loads(body['output'])
+        output = jsonutils.loads(body['output'])
         self.assertEqual("Hello Tempest", output['result'])
 
     @decorators.idempotent_id('9438e195-031c-4502-b216-6d72941ec281')

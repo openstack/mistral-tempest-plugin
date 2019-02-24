@@ -15,12 +15,12 @@
 #    limitations under the License.
 
 import contextlib
-import json
 import os
 import shutil
 import tempfile
 
 from oslo_concurrency import processutils
+from oslo_serialization import jsonutils
 
 
 class NotDefined(object):
@@ -47,7 +47,7 @@ def get_dict_from_string(string, delimiter=','):
 
         if len(kv_list) > 1:
             try:
-                value = json.loads(kv_list[1])
+                value = jsonutils.loads(kv_list[1])
             except ValueError:
                 value = kv_list[1]
 
