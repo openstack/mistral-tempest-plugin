@@ -15,6 +15,7 @@
 import json
 import os
 from os import path
+import testtools
 import time
 
 from oslo_log import log as logging
@@ -231,6 +232,7 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         super(SSHActionsTestsV2, self).tearDown()
 
     @decorators.attr(type='sanity')
+    @testtools.skip('https://bugs.launchpad.net/mistral/+bug/1822969')
     @decorators.idempotent_id('3e12a2ad-5b10-46b0-ae1f-ed34d3cc6ae2')
     def test_run_ssh_action(self):
         input_data = {
@@ -254,8 +256,8 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
         self.assertIn(self.public_vm['name'], output['result'])
 
     @decorators.attr(type='sanity')
+    @testtools.skip('https://bugs.launchpad.net/mistral/+bug/1822969')
     @decorators.idempotent_id('6c09fb04-70b4-43a6-b5f8-a53ca92e66e0')
-    @decorators.skip_because(bug="1736685")
     def test_run_ssh_proxied_action(self):
         guest_vm_ip = self.guest_vm['addresses'].popitem()[1][0]['addr']
 
