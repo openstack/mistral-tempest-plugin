@@ -12,8 +12,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import json
-
+from oslo_serialization import jsonutils
 from oslo_utils import uuidutils
 from tempest import config
 
@@ -41,7 +40,9 @@ class MistralClientV2(base.MistralClientBase):
     def post_json(self, url_path, obj, extra_headers={}):
         headers = {"Content-Type": "application/json"}
         headers = dict(headers, **extra_headers)
-        return self.post(url_path, json.dumps(obj), headers=headers)
+        return self.post(url_path,
+                         jsonutils.dump_as_bytes(obj),
+                         headers=headers)
 
     def update_request(self, url_path, file_name):
         headers = {"headers": "Content-Type:text/plain"}
@@ -52,17 +53,17 @@ class MistralClientV2(base.MistralClientBase):
             headers=headers
         )
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def get_definition(self, item, name):
         resp, body = self.get("%s/%s" % (item, name))
 
-        return resp, json.loads(body)['definition']
+        return resp, jsonutils.loads(body)['definition']
 
     def create_workbook(self, yaml_file):
         resp, body = self.post_request('workbooks', yaml_file)
 
-        wb_name = json.loads(body)['name']
+        wb_name = jsonutils.loads(body)['name']
         self.workbooks.append(wb_name)
 
         _, wfs = self.get_list_obj('workflows')
@@ -71,7 +72,7 @@ class MistralClientV2(base.MistralClientBase):
             if wf['name'].startswith(wb_name):
                 self.workflows.append(wf['id'])
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def create_workflow(self, yaml_file, scope=None, namespace=None):
         url_path = 'workflows?'
@@ -84,10 +85,10 @@ class MistralClientV2(base.MistralClientBase):
 
         resp, body = self.post_request(url_path, yaml_file)
 
-        for wf in json.loads(body)['workflows']:
+        for wf in jsonutils.loads(body)['workflows']:
             self.workflows.append(wf['id'])
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def get_workflow(self, wf_identifier, namespace=None):
 
@@ -97,7 +98,7 @@ class MistralClientV2(base.MistralClientBase):
 
         resp, body = self.get_request(url_path)
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def update_workflow(self, file_name, namespace=None):
         url_path = "workflows?"
@@ -128,20 +129,20 @@ class MistralClientV2(base.MistralClientBase):
             body.update({'workflow_namespace': wf_namespace})
 
         if wf_input:
-            body.update({'input': json.dumps(wf_input)})
+            body.update({'input': jsonutils.dump_as_bytes(wf_input)})
         if params:
-            body.update({'params': json.dumps(params)})
+            body.update({'params': jsonutils.dump_as_bytes(params)})
 
-        resp, body = self.post('executions', json.dumps(body))
+        resp, body = self.post('executions', jsonutils.dump_as_bytes(body))
 
-        self.executions.append(json.loads(body)['id'])
+        self.executions.append(jsonutils.loads(body)['id'])
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def update_execution(self, execution_id, put_body):
         resp, body = self.put('executions/%s' % execution_id, put_body)
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def get_execution(self, execution_id):
         return self.get('executions/%s' % execution_id)
@@ -171,21 +172,23 @@ class MistralClientV2(base.MistralClientBase):
         }
 
         if wf_input:
-            post_body.update({'workflow_input': json.dumps(wf_input)})
+            post_body.update({
+                'workflow_input': jsonutils.dump_as_bytes(wf_input)})
 
-        rest, body = self.post('cron_triggers', json.dumps(post_body))
+        rest, body = self.post('cron_triggers',
+                               jsonutils.dump_as_bytes(post_body))
 
         self.triggers.append(name)
 
-        return rest, json.loads(body)
+        return rest, jsonutils.loads(body)
 
     def create_action(self, yaml_file):
         resp, body = self.post_request('actions', yaml_file)
 
         self.actions.extend(
-            [action['name'] for action in json.loads(body)['actions']])
+            [action['name'] for action in jsonutils.loads(body)['actions']])
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def get_wf_tasks(self, wf_name):
         all_tasks = self.get_list_obj('tasks')[1]['tasks']
@@ -196,11 +199,11 @@ class MistralClientV2(base.MistralClientBase):
         resp, body = self.post_json('action_executions', request_body,
                                     extra_headers)
 
-        params = json.loads(request_body.get('params', '{}'))
+        params = jsonutils.loads(request_body.get('params', '{}'))
         if params.get('save_result', False):
-            self.action_executions.append(json.loads(body)['id'])
+            self.action_executions.append(jsonutils.loads(body)['id'])
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def create_event_trigger(self, wf_id, exchange, topic, event, name='',
                              wf_input=None, wf_params=None):
@@ -213,14 +216,17 @@ class MistralClientV2(base.MistralClientBase):
         }
 
         if wf_input:
-            post_body.update({'workflow_input': json.dumps(wf_input)})
+            post_body.update({
+                'workflow_input': jsonutils.dump_as_bytes(wf_input)})
 
         if wf_params:
-            post_body.update({'workflow_params': json.dumps(wf_params)})
+            post_body.update({
+                'workflow_params': jsonutils.dump_as_bytes(wf_params)})
 
-        rest, body = self.post('event_triggers', json.dumps(post_body))
+        rest, body = self.post('event_triggers',
+                               jsonutils.dump_as_bytes(post_body))
 
-        event_trigger = json.loads(body)
+        event_trigger = jsonutils.loads(body)
         self.event_triggers.append(event_trigger['id'])
 
         return rest, event_trigger

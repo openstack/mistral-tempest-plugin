@@ -13,11 +13,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
 import os
 import time
 
-
+from oslo_serialization import jsonutils
 from tempest import config
 from tempest.lib import auth
 from tempest.lib.common import rest_client
@@ -77,7 +76,7 @@ class MistralClientBase(rest_client.RestClient):
     def get_list_obj(self, url_path):
         resp, body = self.get(url_path)
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def delete_obj(self, obj, name, force=None):
         if force:
@@ -97,7 +96,7 @@ class MistralClientBase(rest_client.RestClient):
     def get_object(self, obj, id):
         resp, body = self.get('{obj}/{id}'.format(obj=obj, id=id))
 
-        return resp, json.loads(body)
+        return resp, jsonutils.loads(body)
 
     def wait_execution_success(self, ex_body, timeout=180, url='executions'):
         return self.wait_execution(ex_body, timeout=timeout, url=url)

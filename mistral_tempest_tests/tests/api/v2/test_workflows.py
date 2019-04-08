@@ -11,9 +11,9 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-import json
 
 from oslo_concurrency.fixture import lockutils
+from oslo_serialization import jsonutils
 from tempest.lib import decorators
 from tempest.lib import exceptions
 
@@ -57,7 +57,7 @@ class WorkflowTestsV2(base.TestCase):
         name = body['workflows'][0]['name']
 
         resp, raw_body = self.admin_client.get('workflows?all_projects=true')
-        body = json.loads(raw_body)
+        body = jsonutils.loads(raw_body)
 
         self.assertEqual(200, resp.status)
 
@@ -78,7 +78,7 @@ class WorkflowTestsV2(base.TestCase):
             'workflows?project_id=%s' %
             self.client.auth_provider.credentials.tenant_id
         )
-        body = json.loads(raw_body)
+        body = jsonutils.loads(raw_body)
 
         self.assertEqual(200, resp.status)
 
@@ -99,7 +99,7 @@ class WorkflowTestsV2(base.TestCase):
             'workflows?project_id=%s' %
             self.client.auth_provider.credentials.tenant_id
         )
-        body = json.loads(raw_body)
+        body = jsonutils.loads(raw_body)
 
         self.assertEqual(200, resp.status)
 

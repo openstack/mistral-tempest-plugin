@@ -13,13 +13,12 @@
 # under the License.
 
 from oslo_concurrency.fixture import lockutils
+from oslo_serialization import jsonutils
 from tempest.lib import decorators
 from tempest.lib import exceptions
 
 from mistral_tempest_tests.tests import base
 from mistral_tempest_tests.tests import utils
-
-import json
 
 
 class ExecutionTestsV2(base.TestCase):
@@ -370,7 +369,7 @@ class ExecutionTestsV2(base.TestCase):
 
         self.assertEqual(
             namespace,
-            json.loads(top_execution['params'])['namespace']
+            jsonutils.loads(top_execution['params'])['namespace']
         )
 
         resp, tasks = self.client.get_tasks(top_execution['id'])
@@ -387,7 +386,7 @@ class ExecutionTestsV2(base.TestCase):
 
         self.assertEqual(
             namespace,
-            json.loads(middle_execution['params'])['namespace']
+            jsonutils.loads(middle_execution['params'])['namespace']
         )
 
         resp, tasks = self.client.get_tasks(middle_execution['id'])
@@ -404,7 +403,7 @@ class ExecutionTestsV2(base.TestCase):
 
         self.assertEqual(
             namespace,
-            json.loads(lowest_execution['params'])['namespace']
+            jsonutils.loads(lowest_execution['params'])['namespace']
         )
 
         resp, tasks = self.client.get_tasks(lowest_execution['id'])
