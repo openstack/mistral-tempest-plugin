@@ -4,8 +4,8 @@
     pre-run: playbooks/tempest/pre.yaml
     timeout: 9000
     required-projects:
-      - openstack-dev/devstack
-      - openstack-infra/devstack-gate
+      - openstack/devstack
+      - openstack/devstack-gate
       - openstack/heat
       - openstack/mistral
       - openstack/mistral-lib
@@ -18,7 +18,7 @@
       tox_envlist: all
       tempest_test_regex: mistral
       devstack_localrc:
-        TEMPEST_PLUGINS: "'{{ ansible_user_dir }}/src/git.openstack.org/openstack/mistral-tempest-plugin'"
+        TEMPEST_PLUGINS: "'{{ ansible_user_dir }}/src/opendev.org/openstack/mistral-tempest-plugin'"
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
         MISTRAL_USE_MOD_WSGI: true
@@ -35,9 +35,9 @@
         s-account: true
         tempest: true
       devstack_plugins:
-        mistral: https://git.openstack.org/openstack/mistral
-        heat: https://git.openstack.org/openstack/heat
-        zaqar: https://git.openstack.org/openstack/zaqar
+        mistral: https://opendev.org/openstack/mistral
+        heat: https://opendev.org/openstack/heat
+        zaqar: https://opendev.org/openstack/zaqar
 
 - job:
     name: mistral-devstack
