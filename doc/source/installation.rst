@@ -8,6 +8,6 @@ the same environment where Tempest is installed.
 
 At the command line::
 
-    $ git clone https://git.openstack.org/cgit/openstack/mistral-tempest-plugin
+    $ git clone https://opendev.org/openstack/mistral-tempest-plugin
     $ cd mistral-tempest-plugin/
     $ pip install -e .
