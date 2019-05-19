@@ -59,6 +59,7 @@
 
 - project:
     templates:
+      - build-openstack-docs-pti
       - check-requirements
       - tempest-plugin-jobs
     check:
@@ -68,11 +69,9 @@
             branches: ^(?!stable/(newton|ocata)).*$
         - mistral-devstack-kombu:
             branches: ^(?!stable/newton).*$
-        - build-openstack-sphinx-docs
     gate:
       queue: mistral
       jobs:
         - mistral-devstack
         - mistral-devstack-non-apache
         - mistral-devstack-kombu
-        - build-openstack-sphinx-docs
