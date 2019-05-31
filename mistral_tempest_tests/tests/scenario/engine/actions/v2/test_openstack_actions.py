@@ -12,6 +12,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
+from oslo_serialization import jsonutils
 from tempest.lib import decorators
 
 from mistral_tempest_tests.tests import base
@@ -36,9 +37,16 @@ class OpenStackActionsTestsV2(base.TestCase):
         wf_name = self.wb['name'] + '.nova'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
-        executed_task = self.client.get_wf_tasks(wf_name)[-1]
-
-        self.assertEqual('SUCCESS', executed_task['state'])
+        executed_tasks = self.client.get_wf_tasks(wf_name)
+        for executed_task in executed_tasks:
+            self.assertEqual('SUCCESS', executed_task['state'])
+            if executed_task['name'] == 'versions_get_current':
+                published = jsonutils.loads(executed_task['published'])
+                # NOTE(kiennt): By default, microversion is 2.1.
+                #               But now Mistral supports OpenStack project
+                #               dynamic version, so the version should be
+                #               the max possible version.
+                self.assertNotEqual('2.1', published['result']['version'])
 
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('81bdc1c9-cd9a-4c97-b8ce-e44f5211eace')

@@ -18,6 +18,10 @@ workflows:
         action: nova.flavors_list
         publish:
            result: <% task().result %>
+      versions_get_current:
+        action: nova.versions_get_current
+        publish:
+           result: <% task().result %>
 
   glance:
     type: direct
