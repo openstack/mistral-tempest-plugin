@@ -18,7 +18,7 @@
       tox_envlist: all
       tempest_test_regex: mistral
       devstack_localrc:
-        TEMPEST_PLUGINS: "'{{ ansible_user_dir }}/src/opendev.org/openstack/mistral-tempest-plugin'"
+        TEMPEST_PLUGINS: "{{ ansible_user_dir }}/src/opendev.org/openstack/mistral-tempest-plugin"
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
         MISTRAL_USE_MOD_WSGI: true
