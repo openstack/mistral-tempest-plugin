@@ -23,6 +23,7 @@
         MYSQL_ROOT_PW: secretdatabase
         MISTRAL_USE_MOD_WSGI: true
         MISTRAL_RPC_IMPLEMENTATION: oslo
+        USE_PYTHON3: true
       devstack_services:
         heat: true
         h-api: true

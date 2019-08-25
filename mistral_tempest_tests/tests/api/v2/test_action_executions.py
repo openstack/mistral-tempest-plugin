@@ -95,7 +95,7 @@ class ActionExecutionTestsV2(base.TestCase):
         self.assertIn("output", action_execution)
 
         resp, body = self.client.get_action_execution(action_execution['id'])
-        self.assertIn("output", body)
+        self.assertIn("output", body.decode('utf-8'))
 
         # Test when passing task execution ID
 
