@@ -15,7 +15,18 @@
 
 from oslo_config import cfg
 
-service_option = cfg.BoolOpt('mistral',
-                             default=True,
-                             help="Whether or not Mistral is expected to be"
-                                  "available")
+ServiceAvailableGroup = [cfg.BoolOpt('mistral',
+                                     default=True,
+                                     help="Whether or not Mistral is expected"
+                                          " to be available")]
+
+service_available_group = cfg.OptGroup(name="service_available",
+                                       title="Available OpenStack Services")
+
+mistral_api_group = cfg.OptGroup(name="mistral_api",
+                                 title="Mistral Api Service Options")
+
+MistralApiGroup = [cfg.BoolOpt("service_api_supported",
+                               default=False,
+                               help="Whether or not services api "
+                                    "is available")]

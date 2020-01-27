@@ -16,6 +16,7 @@
 
 import os
 
+from tempest import config
 from tempest.test_discover import plugins
 
 from mistral_tempest_tests import config as mistral_config
@@ -30,8 +31,17 @@ class MistralTempestPlugin(plugins.TempestPlugin):
         return full_test_dir, base_path
 
     def register_opts(self, conf):
-        conf.register_opt(mistral_config.service_option,
-                          group='service_available')
+        config.register_opt_group(conf,
+                                  mistral_config.service_available_group,
+                                  mistral_config.ServiceAvailableGroup)
+        config.register_opt_group(conf,
+                                  mistral_config.mistral_api_group,
+                                  mistral_config.MistralApiGroup)
 
     def get_opt_lists(self):
-        return [('service_available', [mistral_config.service_option])]
+        return [
+            (mistral_config.service_available_group.name,
+             mistral_config.ServiceAvailableGroup),
+            (mistral_config.mistral_api_group.name,
+             mistral_config.MistralApiGroup),
+        ]
