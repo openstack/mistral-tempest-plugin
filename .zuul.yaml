@@ -9,6 +9,7 @@
       - openstack/heat
       - openstack/mistral
       - openstack/mistral-lib
+      - openstack/mistral-extra
       - openstack/mistral-tempest-plugin
       - openstack/python-mistralclient
       - openstack/tempest
