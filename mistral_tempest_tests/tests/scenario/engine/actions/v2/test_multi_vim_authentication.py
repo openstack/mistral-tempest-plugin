@@ -16,8 +16,8 @@ import base64
 from keystoneclient import service_catalog as ks_service_catalog
 from oslo_serialization import jsonutils
 from oslo_utils import uuidutils
-from six.moves.urllib.parse import urlparse
 from tempest.lib import decorators
+from urllib.parse import urlparse
 
 from mistral_tempest_tests.tests import base
 

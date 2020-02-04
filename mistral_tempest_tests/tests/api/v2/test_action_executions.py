@@ -12,8 +12,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import six
-
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
 from tempest.lib import decorators
@@ -45,8 +43,7 @@ class ActionExecutionTestsV2(base.TestCase):
             except Exception as e:
                 LOG.exception(
                     'Exception raised when deleting '
-                    'action_executions %s, error message: %s.',
-                    action_ex, six.text_type(e)
+                    'action_executions %s, error message: %s.', action_ex, e
                 )
 
         self.client.action_executions = []
