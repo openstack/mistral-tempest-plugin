@@ -113,7 +113,9 @@ def _extract_target_headers_from_client(client):
     }
 
 
-def _execute_action(client, request, extra_headers={}):
+def _execute_action(client, request, extra_headers=None):
+    if extra_headers is None:
+        extra_headers = {}
     _, result = client.create_action_execution(
         request,
         extra_headers=extra_headers

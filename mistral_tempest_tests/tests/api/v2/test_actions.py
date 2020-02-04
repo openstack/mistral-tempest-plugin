@@ -24,7 +24,8 @@ class ActionTestsV2(base.TestCase):
 
     _service = 'workflowv2'
 
-    def get_field_value(self, body, act_name, field):
+    @staticmethod
+    def get_field_value(body, act_name, field):
         return [body['actions'][i][field]
                 for i in range(len(body['actions']))
                 if body['actions'][i]['name'] == act_name][0]
@@ -57,10 +58,10 @@ class ActionTestsV2(base.TestCase):
         self.assertIn('next', body)
 
         name_1 = body['actions'][0].get('name')
-        next = body.get('next')
+        next_ = body.get('next')
 
         param_dict = utils.get_dict_from_string(
-            next.split('?')[1],
+            next_.split('?')[1],
             delimiter='&'
         )
 
@@ -75,7 +76,7 @@ class ActionTestsV2(base.TestCase):
         self.assertDictContainsSubset(expected_sub_dict, param_dict)
 
         # Query again using 'next' hint
-        url_param = next.split('/')[-1]
+        url_param = next_.split('/')[-1]
         resp, body = self.client.get_list_obj(url_param)
 
         self.assertEqual(200, resp.status)
