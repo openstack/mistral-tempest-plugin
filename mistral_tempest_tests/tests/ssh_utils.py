@@ -15,7 +15,6 @@
 from os import path
 from oslo_log import log as logging
 import paramiko
-import six
 
 KEY_PATH = path.expanduser("~/.ssh/")
 LOG = logging.getLogger(__name__)
@@ -47,7 +46,7 @@ def _to_paramiko_private_key(private_key_filename, password=None):
 
 
 def _connect(host, username, password=None, pkey=None, proxy=None):
-    if isinstance(pkey, six.string_types):
+    if isinstance(pkey, str):
         pkey = _to_paramiko_private_key(pkey, password)
 
     LOG.debug('Creating SSH connection to %s', host)
