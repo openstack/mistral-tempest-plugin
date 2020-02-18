@@ -94,7 +94,8 @@ class SSHActionsTestsV2(base.TestCaseAdvanced):
 
         return ip
 
-    def _wait_until_server_up(self, server_ip, timeout=120, delay=2):
+    @staticmethod
+    def _wait_until_server_up(server_ip, timeout=120, delay=2):
         seconds_remain = timeout
 
         LOG.info("Waiting server SSH [IP=%s]...", server_ip)

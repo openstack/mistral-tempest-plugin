@@ -246,7 +246,4 @@ class ActionExecutionTestsV2(base.TestCase):
 
         self.assertEqual(200, resp.status)
         action_execution = body['action_executions'][0]
-
-        self.assertEqual(200, resp.status)
-        action_execution = body['action_executions'][0]
         self.assertEqual(wf_namespace, action_execution['workflow_namespace'])

@@ -129,10 +129,10 @@ class WorkflowTestsV2(base.TestCase):
         self.assertIn('next', body)
 
         name_1 = body['workflows'][0].get('name')
-        next = body.get('next')
+        next_ = body.get('next')
 
         param_dict = utils.get_dict_from_string(
-            next.split('?')[1],
+            next_.split('?')[1],
             delimiter='&'
         )
 
@@ -147,7 +147,7 @@ class WorkflowTestsV2(base.TestCase):
         self.assertDictContainsSubset(expected_sub_dict, param_dict)
 
         # Query again using 'next' hint
-        url_param = next.split('/')[-1]
+        url_param = next_.split('/')[-1]
         resp, body = self.client.get_list_obj(url_param)
 
         self.assertEqual(200, resp.status)
@@ -256,13 +256,13 @@ class WorkflowTestsV2(base.TestCase):
             namespace=namespace
         )
         name = body['workflows'][0]['name']
-        id = body['workflows'][0]['id']
+        wf_id = body['workflows'][0]['id']
 
         self.assertEqual(201, resp.status)
         self.assertEqual(name, body['workflows'][0]['name'])
 
         resp, body = self.client.get_workflow(
-            id
+            wf_id
         )
 
         self.assertEqual(namespace, body['namespace'])
@@ -279,12 +279,12 @@ class WorkflowTestsV2(base.TestCase):
             namespace=namespace
         )
         name = body['workflows'][0]['name']
-        id = body['workflows'][0]['id']
+        wf_id = body['workflows'][0]['id']
 
         self.assertEqual(201, resp.status)
         self.assertEqual(name, body['workflows'][0]['name'])
 
-        resp, body = self.client.get_workflow(id)
+        resp, body = self.client.get_workflow(wf_id)
 
         self.assertEqual(namespace, body['namespace'])
 
@@ -294,7 +294,7 @@ class WorkflowTestsV2(base.TestCase):
             'single_wf.yaml'
         )
 
-        resp, body = self.client.get_workflow(id)
+        resp, body = self.client.get_workflow(wf_id)
         self.assertEqual(200, resp.status)
 
     @decorators.attr(type='sanity')
@@ -373,8 +373,7 @@ class WorkflowTestsV2(base.TestCase):
         tr_name = 'trigger'
         resp, body = self.client.create_workflow('wf_v2.yaml')
         name = body['workflows'][0]['name']
-        resp, body = self.client.create_cron_trigger(
-            tr_name, name, None, '5 * * * *')
+        self.client.create_cron_trigger(tr_name, name, None, '5 * * * *')
 
         try:
             self.assertRaises(
@@ -414,12 +413,7 @@ class WorkflowTestsV2(base.TestCase):
         tr_name = 'trigger'
         _, body = self.client.create_workflow('wf_v2.yaml', scope='public')
         name = body['workflows'][0]['name']
-        resp, body = self.alt_client.create_cron_trigger(
-            tr_name,
-            name,
-            None,
-            '5 * * * *'
-        )
+        self.alt_client.create_cron_trigger(tr_name, name, None, '5 * * * *')
 
         try:
             exception = self.assertRaises(

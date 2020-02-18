@@ -93,8 +93,8 @@ class MistralClientBase(rest_client.RestClient):
 
         return self.delete('{obj}/{name}'.format(obj=obj, name=name))
 
-    def get_object(self, obj, id):
-        resp, body = self.get('{obj}/{id}'.format(obj=obj, id=id))
+    def get_object(self, obj, _id):
+        resp, body = self.get('{obj}/{id}'.format(obj=obj, id=_id))
 
         return resp, jsonutils.loads(body)
 

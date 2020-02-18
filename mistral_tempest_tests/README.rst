@@ -23,3 +23,4 @@ Alternatively, to run mistral tempest plugin tests using tox, go to tempest dire
 And, to run a specific test::
 
     $ tox -eall-plugin mistral_tempest_tests.tests.api.v2.test_mistral_basic_v2.WorkbookTestsV2.test_get_workbook
+

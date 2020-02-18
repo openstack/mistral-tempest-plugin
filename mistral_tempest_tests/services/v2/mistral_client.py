@@ -37,7 +37,9 @@ class MistralClientV2(base.MistralClientBase):
 
         return self.get(url_path, headers=headers)
 
-    def post_json(self, url_path, obj, extra_headers={}):
+    def post_json(self, url_path, obj, extra_headers=None):
+        if extra_headers is None:
+            extra_headers = {}
         headers = {"Content-Type": "application/json"}
         headers = dict(headers, **extra_headers)
         return self.post(url_path,
@@ -195,7 +197,9 @@ class MistralClientV2(base.MistralClientBase):
 
         return [t for t in all_tasks if t['workflow_name'] == wf_name]
 
-    def create_action_execution(self, request_body, extra_headers={}):
+    def create_action_execution(self, request_body, extra_headers=None):
+        if extra_headers is None:
+            extra_headers = {}
         resp, body = self.post_json('action_executions', request_body,
                                     extra_headers)
 

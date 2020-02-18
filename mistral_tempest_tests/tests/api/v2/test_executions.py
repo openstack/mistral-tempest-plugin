@@ -81,9 +81,9 @@ class ExecutionTestsV2(base.TestCase):
         self.assertIn('next', body)
 
         workflow_name_1 = body['executions'][0].get('workflow_name')
-        next = body.get('next')
+        next_ = body.get('next')
         param_dict = utils.get_dict_from_string(
-            next.split('?')[1],
+            next_.split('?')[1],
             delimiter='&'
         )
 
@@ -100,7 +100,7 @@ class ExecutionTestsV2(base.TestCase):
         )
 
         # Query again using 'next' link
-        url_param = next.split('/')[-1]
+        url_param = next_.split('/')[-1]
         resp, body = self.client.get_list_obj(url_param)
 
         self.assertEqual(200, resp.status)
