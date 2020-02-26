@@ -59,6 +59,9 @@ class TestCase(test.BaseTestCase):
             self.alt_client = mistral_client.MistralClientV2(
                 self.alt_mgr.auth_provider, self._service)
 
+    def assertPartIn(self, needle, haystack, message=''):
+        self.assertTrue(any(needle in s for s in haystack), message)
+
     def tearDown(self):
         super(TestCase, self).tearDown()
 

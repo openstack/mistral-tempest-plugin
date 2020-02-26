@@ -44,7 +44,7 @@ class WorkflowTestsV2(base.TestCase):
 
         names = [wf['name'] for wf in body['workflows']]
 
-        self.assertIn('std.create_instance', names)
+        self.assertPartIn('create_instance', names)
 
         self.assertNotIn('next', body)
 
