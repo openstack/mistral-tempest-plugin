@@ -89,6 +89,9 @@
             branches: ^(?!stable/(newton|ocata)).*$
         - mistral-devstack-kombu:
             branches: ^(?!stable/newton).*$
+        - mistral-devstack-ussuri
+        - mistral-devstack-train
+        - mistral-devstack-stein
     gate:
       queue: mistral
       jobs:
@@ -97,3 +100,24 @@
         - mistral-devstack-non-apache-tempest-ipv6-only
         - mistral-devstack-non-apache
         - mistral-devstack-kombu
+
+- job:
+    name: mistral-devstack-ussuri
+    parent: mistral-devstack
+    override-checkout: stable/ussuri
+
+- job:
+    name: mistral-devstack-train
+    parent: mistral-devstack
+    override-checkout: stable/train
+    vars:
+      devstack_localrc:
+        USE_PYTHON3: True
+
+- job:
+    name: mistral-devstack-stein
+    parent: mistral-devstack
+    override-checkout: stable/stein
+    vars:
+      devstack_localrc:
+        USE_PYTHON3: True
