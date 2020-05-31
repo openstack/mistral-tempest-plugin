@@ -56,9 +56,10 @@ project = u'mistral-tempest-plugin Release Notes'
 copyright = u'2017, OpenStack Developers'
 
 # openstackdocstheme options
-repository_name = 'openstack/openstack'
-bug_project = 'mistral-tempest-plugin'
-bug_tag = ''
+openstackdocs_repo_name = 'openstack/mistral-tempest-plugin'
+openstackdocs_bug_project = 'mistral'
+openstackdocs_bug_tag = 'mistral-tempest-plugin'
+openstackdocs_auto_name = False
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -100,7 +101,7 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
