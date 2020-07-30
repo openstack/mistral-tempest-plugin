@@ -104,11 +104,13 @@
 - job:
     name: mistral-devstack-ussuri
     parent: mistral-devstack
+    nodeset: openstack-single-node-bionic
     override-checkout: stable/ussuri
 
 - job:
     name: mistral-devstack-train
     parent: mistral-devstack
+    nodeset: openstack-single-node-bionic
     override-checkout: stable/train
     vars:
       devstack_localrc:
@@ -118,6 +120,7 @@
     name: mistral-devstack-stein
     parent: mistral-devstack
     override-checkout: stable/stein
+    nodeset: openstack-single-node-bionic
     vars:
       devstack_localrc:
         USE_PYTHON3: True
