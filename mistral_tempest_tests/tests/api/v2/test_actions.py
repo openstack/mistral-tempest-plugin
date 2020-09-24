@@ -12,7 +12,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import datetime
 from tempest.lib import decorators
 from tempest.lib import exceptions
 import testtools
@@ -199,14 +198,27 @@ class ActionTestsV2(base.TestCase):
     @decorators.attr(type='smoke')
     @decorators.idempotent_id('20b3d527-447d-492b-8cb7-ac5e3757d7d5')
     def test_get_list_actions_greater_than_filter(self):
-        time = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        resp, body = self.client.create_action('action_v2.yaml')
 
-        resp, body = self.client.get_list_obj(
-            'actions?created_at=gt:' + time.replace(' ', '%20')
-        )
+        self.assertEqual(201, resp.status)
+
+        # NOTE(rakhmerov): The filter "name=gt:freeting" might seem weird
+        # but we can use it because Mistral compare alphabetical order
+        # of action names with filter value.
+        resp, body = self.client.get_list_obj('actions?name=gt:freeting')
 
         self.assertEqual(200, resp.status)
-        self.assertEmpty(body['actions'])
+
+        # There should be at least "greeting" action in the result set
+        # and possible some other standard actions whose names go after
+        # "freeting" in the alphabet order.
+        self.assertGreater(len(body['actions']), 0)
+
+        # Make sure the "greeting" action is in the result set.
+        self.assertEqual(
+            1,
+            len([act for act in body['actions'] if act['name'] == 'greeting'])
+        )
 
     # TODO(rakhmerov): Come up with a good test, we can't use 'created_at'
     # anymore.
@@ -290,8 +302,13 @@ class ActionTestsV2(base.TestCase):
 
         self.assertEqual(201, resp.status)
 
+        # TODO(rakhmerov): Both filters are temporarily related to the
+        # field 'name', there's no other suitable field right now to
+        # to apply a filter to. We could use "&tags=has:hello", for
+        # example, but it will work only after the Action Provider
+        # transition is completed, now this filter is broken.
         resp, body = self.client.get_list_obj(
-            'actions?name=in:greeting,farewell&input=name'
+            'actions?name=in:greeting,farewell&name=greeting'
         )
 
         self.assertEqual(200, resp.status)
@@ -421,7 +438,8 @@ class ActionTestsV2(base.TestCase):
         self.assertRaises(
             exceptions.BadRequest,
             self.client.update_request,
-            'actions', 'wb_v2.yaml'
+            'actions',
+            'wb_v2.yaml'
         )
 
     @decorators.attr(type='negative')
@@ -430,9 +448,13 @@ class ActionTestsV2(base.TestCase):
         self.assertRaises(
             exceptions.NotFound,
             self.client.delete_obj,
-            'actions', 'nonexist'
+            'actions',
+            'nonexist'
         )
 
+    # TODO(rakhmerov): Rewrite it after https://review.opendev.org/#/c/746022/
+    # is merged.
+    @testtools.skip('Needs to be rewritten.')
     @decorators.attr(type='negative')
     @decorators.idempotent_id('74d0d480-793a-46ca-b88a-8336c1897f3a')
     def test_delete_standard_action(self):
