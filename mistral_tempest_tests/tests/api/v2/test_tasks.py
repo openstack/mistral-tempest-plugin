@@ -55,9 +55,10 @@ class TasksTestsV2(base.TestCase):
         resp, body = self.client.get_list_obj('tasks')
 
         self.assertEqual(200, resp.status)
-        self.assertEqual(
-            self.direct_wf_name, body['tasks'][-1]['workflow_name']
-        )
+        task_id = body['tasks'][-1]['id']
+        resp, body = self.client.get_object('tasks', task_id)
+        self.assertEqual(200, resp.status)
+        self.assertEqual(self.direct_wf_name, body['workflow_name'])
 
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('3230d694-40fd-4094-ad12-024f40a21b94')
