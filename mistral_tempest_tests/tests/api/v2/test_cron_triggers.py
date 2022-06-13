@@ -235,3 +235,15 @@ class CronTriggerTestsV2(base.TestCase):
         self.assertRaises(exceptions.BadRequest,
                           self.client.create_cron_trigger,
                           'trigger', self.wf_name, None, '88 * * * *')
+
+        self.assertRaises(exceptions.BadRequest,
+                          self.client.create_cron_trigger,
+                          'trigger', self.wf_name, None, '* 88 * * *')
+
+        self.assertRaises(exceptions.BadRequest,
+                          self.client.create_cron_trigger,
+                          'trigger', self.wf_name, None, '* * * 35 *')
+
+        self.assertRaises(exceptions.BadRequest,
+                          self.client.create_cron_trigger,
+                          'trigger', self.wf_name, None, '* * * * 15')
