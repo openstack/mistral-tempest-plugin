@@ -52,8 +52,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'mistral-tempest-plugin Release Notes'
-copyright = u'2017, OpenStack Developers'
+project = 'mistral-tempest-plugin Release Notes'
+copyright = '2017, OpenStack Developers'
 
 # openstackdocstheme options
 openstackdocs_repo_name = 'openstack/mistral-tempest-plugin'
@@ -213,8 +213,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'mistral-tempest-pluginReleaseNotes.tex',
-     u'mistral-tempest-plugin  Release Notes Documentation',
-     u'OpenStack Foundation', 'manual'),
+     'mistral-tempest-plugin  Release Notes Documentation',
+     'OpenStack Foundation', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -244,8 +244,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'mistral-tempest-pluginrereleasenotes',
-     u'mistral-tempest-plugin  Release Notes Documentation',
-     [u'OpenStack Foundation'], 1)
+     'mistral-tempest-plugin  Release Notes Documentation',
+     ['OpenStack Foundation'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -259,8 +259,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'mistral-tempest-plugin ReleaseNotes',
-     u'mistral-tempest-plugin Release Notes Documentation',
-     u'OpenStack Foundation', 'mistral-tempest-pluginReleaseNotes',
+     'mistral-tempest-plugin Release Notes Documentation',
+     'OpenStack Foundation', 'mistral-tempest-pluginReleaseNotes',
      'One line description of project.',
      'Miscellaneous'),
 ]
