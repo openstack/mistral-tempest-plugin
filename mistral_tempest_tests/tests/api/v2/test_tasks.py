@@ -83,6 +83,7 @@ class TaskTypesTestsV2(base.TestCase):
         _, wb_body = self.client.create_workbook('wb_with_nested_wf.yaml')
         self.nested_wf_name = 'wb_with_nested_wf.wrapping_wf'
         _, execution = self.client.create_execution(self.nested_wf_name)
+        self.client.wait_execution_success(execution)
 
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('1ac726eb-b945-4b82-8755-a2fb2dc009bc')
