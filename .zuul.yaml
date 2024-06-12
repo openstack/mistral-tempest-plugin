@@ -5,7 +5,6 @@
     timeout: 9000
     required-projects: &base_required_projects
       - openstack/devstack
-      - openstack/devstack-gate
       - openstack/heat
       - openstack/mistral
       - openstack/mistral-lib
