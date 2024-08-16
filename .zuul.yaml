@@ -88,7 +88,6 @@
             branches: ^(?!stable/(newton|ocata)).*$
         - mistral-devstack-kombu:
             branches: ^(?!stable/newton).*$
-        - mistral-devstack-ussuri
     queue: mistral
     gate:
       jobs:
@@ -97,9 +96,3 @@
         - mistral-devstack-non-apache-tempest-ipv6-only
         - mistral-devstack-non-apache
         - mistral-devstack-kombu
-
-- job:
-    name: mistral-devstack-ussuri
-    parent: mistral-devstack
-    nodeset: openstack-single-node-bionic
-    override-checkout: stable/ussuri
