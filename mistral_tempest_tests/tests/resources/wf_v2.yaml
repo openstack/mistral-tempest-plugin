@@ -11,6 +11,16 @@ wf:
       publish:
         result: <% task(hello).result %>
 
+wflong:
+  type: direct
+
+  tasks:
+    hello:
+      action: std.echo output="Hello"
+      wait-before: 60
+      publish:
+        result: <% task(hello).result %>
+
 wf1:
   type: reverse
   input:

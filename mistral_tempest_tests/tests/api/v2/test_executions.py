@@ -32,6 +32,7 @@ class ExecutionTestsV2(base.TestCase):
 
         self.direct_wf_name = 'wf'
         self.direct_wf2_name = 'wf2'
+        self.direct_wflong_name = 'wflong'
         self.sub_wf_name = 'subwf1'
         self.direct_wf_id = body['workflows'][0]['id']
         reverse_wfs = [wf for wf in body['workflows'] if wf['name'] == 'wf1']
@@ -178,7 +179,7 @@ class ExecutionTestsV2(base.TestCase):
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('2f142ba0-6b88-4d63-8544-05c3dbfe13cc')
     def test_update_execution_pause(self):
-        _, execution = self.client.create_execution(self.direct_wf_name)
+        _, execution = self.client.create_execution(self.direct_wflong_name)
         resp, body = self.client.update_execution(
             execution['id'], '{"state": "PAUSED"}')
 
@@ -188,7 +189,7 @@ class ExecutionTestsV2(base.TestCase):
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('f0557236-55ab-457d-9197-05bc2ae53e21')
     def test_update_execution_description(self):
-        _, execution = self.client.create_execution(self.direct_wf_name)
+        _, execution = self.client.create_execution(self.direct_wflong_name)
         resp, body = self.client.update_execution(
             execution['id'], '{"description": "description"}')
 
@@ -198,7 +199,7 @@ class ExecutionTestsV2(base.TestCase):
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('c54b4d68-b179-4339-bdab-a91cd6e819b7')
     def test_update_execution_fail(self):
-        _, execution = self.client.create_execution(self.direct_wf_name)
+        _, execution = self.client.create_execution(self.direct_wflong_name)
         resp, body = self.client.update_execution(
             execution['id'], '{"state": "ERROR", "state_info": "Forced"}')
 
@@ -209,7 +210,7 @@ class ExecutionTestsV2(base.TestCase):
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('b5ce0d18-7d78-45bb-813e-ed94cea65fd0')
     def test_update_execution_by_admin(self):
-        _, execution = self.client.create_execution(self.direct_wf_name)
+        _, execution = self.client.create_execution(self.direct_wflong_name)
         resp, body = self.admin_client.update_execution(
             execution['id'], '{"description": "description set by admin"}')
 
