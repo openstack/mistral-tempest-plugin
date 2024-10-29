@@ -144,7 +144,7 @@ class WorkflowTestsV2(base.TestCase):
             'sort_dirs': 'desc,asc'
         }
 
-        self.assertDictContainsSubset(expected_sub_dict, param_dict)
+        self.assertEqual(param_dict, param_dict | expected_sub_dict)
 
         # Query again using 'next' hint
         url_param = next_.split('/')[-1]
