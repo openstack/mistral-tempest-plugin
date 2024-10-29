@@ -79,6 +79,7 @@ class OpenStackActionsTestsV2(base.TestCase):
         self.assertEqual('SUCCESS', executed_task['state'])
 
     @decorators.attr(type='openstack')
+    @decorators.skip_because(bug="2085878")
     @decorators.idempotent_id('a1f71a72-3681-4d32-aad9-117068717b33')
     def test_cinder_actions(self):
         wf_name = self.wb['name'] + '.cinder'
