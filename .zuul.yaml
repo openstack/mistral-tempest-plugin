@@ -79,3 +79,20 @@
       - build-openstack-docs-pti
       - check-requirements
       - tempest-plugin-jobs
+    check:
+      jobs:
+        - mistral-devstack
+        - mistral-devstack-tempest-ipv6-only
+        - mistral-devstack-non-apache-tempest-ipv6-only
+        - mistral-devstack-non-apache:
+            branches: ^(?!stable/(newton|ocata)).*$
+        - mistral-devstack-kombu:
+            branches: ^(?!stable/newton).*$
+    queue: mistral
+    gate:
+      jobs:
+        - mistral-devstack
+        - mistral-devstack-tempest-ipv6-only
+        - mistral-devstack-non-apache-tempest-ipv6-only
+        - mistral-devstack-non-apache
+        - mistral-devstack-kombu
