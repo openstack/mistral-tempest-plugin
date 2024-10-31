@@ -13,8 +13,8 @@
 # under the License.
 
 import os
+from unittest import mock
 
-import mock
 from tempest import config
 from tempest import test as test
 
