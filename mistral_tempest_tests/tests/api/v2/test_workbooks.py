@@ -136,3 +136,9 @@ class WorkbookTestsV2(base.TestCase):
             'workbooks',
             'wb_v1.yaml'
         )
+
+    @decorators.attr(type='negative')
+    @decorators.idempotent_id('abb132d9-1f52-43a5-b5ff-390089cb5826')
+    def test_delete_nonexistent_workbook(self):
+        self.assertRaises(exceptions.NotFound, self.client.delete_obj,
+                          'workbooks', 'nonexist')
