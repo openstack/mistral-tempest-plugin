@@ -12,7 +12,6 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-import testtools
 
 from tempest import config
 from tempest.lib import decorators
@@ -28,8 +27,7 @@ class ServicesTestsV2(base.TestCase):
 
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('f4359ad2-9109-4305-a00a-77679878f7f9')
-    @testtools.skipUnless(CONF.mistral_api.service_api_supported,
-                          'Service api is not supported')
+    @decorators.skip_because(bug="2099954")
     def test_get_services_list(self):
         resp, body = self.client.get_list_obj('services')
 
