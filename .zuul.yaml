@@ -19,8 +19,6 @@
         TEMPEST_PLUGINS: "/opt/stack/mistral-tempest-plugin"
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
-        MISTRAL_USE_MOD_WSGI: true
-        MISTRAL_RPC_IMPLEMENTATION: oslo
       devstack_services:
         heat: true
         h-api: true
@@ -46,6 +44,7 @@
     required-projects: *base_required_projects
     vars: *base_vars
 
+# TODO(tkajinam): Remove this after < 2025.1 all reach EOL
 - job:
     name: mistral-devstack-non-apache-tempest-ipv6-only
     parent: mistral-devstack-tempest-ipv6-only
@@ -67,6 +66,7 @@
     parent: mistral-devstack
     nodeset: openstack-single-node-jammy
 
+# TODO(tkajinam): Remove this after < 2025.1 all reach EOL
 - job:
     name: mistral-devstack-kombu
     parent: mistral-devstack-tempest-base
@@ -74,6 +74,7 @@
       devstack_localrc:
         MISTRAL_RPC_IMPLEMENTATION: kombu
 
+# TODO(tkajinam): Remove this after < 2025.1 all reach EOL
 - job:
     name: mistral-devstack-non-apache
     parent: mistral-devstack-tempest-base
@@ -90,14 +91,8 @@
       jobs:
         - mistral-devstack
         - mistral-devstack-tempest-ipv6-only
-        - mistral-devstack-non-apache-tempest-ipv6-only
-        - mistral-devstack-non-apache
-        - mistral-devstack-kombu
     queue: mistral
     gate:
       jobs:
         - mistral-devstack
         - mistral-devstack-tempest-ipv6-only
-        - mistral-devstack-non-apache-tempest-ipv6-only
-        - mistral-devstack-non-apache
-        - mistral-devstack-kombu
