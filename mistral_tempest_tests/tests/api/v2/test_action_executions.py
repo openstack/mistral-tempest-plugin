@@ -16,7 +16,6 @@ from oslo_log import log as logging
 from oslo_serialization import jsonutils
 from tempest.lib import decorators
 from tempest.lib import exceptions
-import testtools
 
 from mistral_tempest_tests.tests import base
 
@@ -152,8 +151,6 @@ class ActionExecutionTestsV2(base.TestCase):
         output = jsonutils.loads(body['output'])
         self.assertEqual(404, output['result']['status'])
 
-    # NOTE(amorin) as of 20250904 httpbin.org is down
-    @testtools.skip('Skip because rely on httpbin.org which is down')
     @decorators.attr(type='sanity')
     @decorators.related_bug('1667415')
     @decorators.idempotent_id('3c73de7a-4af0-4657-90d6-d7ebd3c7da18')
@@ -162,7 +159,7 @@ class ActionExecutionTestsV2(base.TestCase):
             {
                 'name': 'std.http',
                 'input':
-                    '{"url": "https://httpbin.org/encoding/utf8"}'
+                    '{"url": "https://httpbingo.org/encoding/utf8"}'
             }
         )
 
