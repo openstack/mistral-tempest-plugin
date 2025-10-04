@@ -1,6 +1,0 @@
-[run]
-branch = True
-source = mistral-tempest-plugin
-
-[report]
-ignore_errors = True
