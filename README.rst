@@ -2,6 +2,10 @@
 Mistral Tempest plugin
 ======================
 
+.. image:: https://governance.openstack.org/tc/badges/mistral-tempest-plugin.svg
+
+.. Change things from this point on
+
 Tempest plugin for Mistral Project.
 
 It contains the tempest plugin for the functional testing of Mistral Project.
