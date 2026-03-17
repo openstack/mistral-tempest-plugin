@@ -58,6 +58,24 @@
     name: mistral-devstack
     parent: mistral-devstack-tempest-base
 
+- job:
+    name: mistral-devstack-2026-1
+    parent: mistral-devstack
+    nodeset: openstack-single-node-noble
+    override-checkout: stable/2026.1
+
+- job:
+    name: mistral-devstack-2025-2
+    parent: mistral-devstack
+    nodeset: openstack-single-node-noble
+    override-checkout: stable/2025.2
+
+- job:
+    name: mistral-devstack-2025-1
+    parent: mistral-devstack
+    nodeset: openstack-single-node-noble
+    override-checkout: stable/2025.1
+
 # TODO(gmann): As per the 2025.1 testing runtime, we need to run at least
 # one job on jammy. This job run on 2025.1 gate so remove once that is EOL.
 - job:
@@ -90,6 +108,9 @@
     check:
       jobs:
         - mistral-devstack
+        - mistral-devstack-2026-1
+        - mistral-devstack-2025-2
+        - mistral-devstack-2025-1
         - mistral-devstack-tempest-ipv6-only
     queue: mistral
     gate:
