@@ -31,13 +31,13 @@ class TasksTestsV2(base.TestCase):
         self.execution_id = execution['id']
 
     def tearDown(self):
+        for ex in self.client.executions:
+            self.client.delete_obj('executions', ex, force=True)
+        self.client.executions = []
+
         for wf in self.client.workflows:
             self.client.delete_obj('workflows', wf)
         self.client.workflows = []
-
-        for wf in self.client.executions:
-            self.client.delete_obj('executions', wf, force=True)
-        self.client.executions = []
 
         super(TasksTestsV2, self).tearDown()
 
@@ -85,6 +85,25 @@ class TaskTypesTestsV2(base.TestCase):
         self.nested_wf_name = 'wb_with_nested_wf.wrapping_wf'
         _, execution = self.client.create_execution(self.nested_wf_name)
         self.client.wait_execution_success(execution)
+
+    def tearDown(self):
+        for ex in self.client.executions:
+            try:
+                self.client.delete_obj('executions', ex, force=True)
+            except Exception:
+                pass
+
+        self.client.executions = []
+
+        for wf in self.client.workflows:
+            try:
+                self.client.delete_obj('workflows', wf)
+            except Exception:
+                pass
+
+        self.client.workflows = []
+
+        super(TaskTypesTestsV2, self).tearDown()
 
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('1ac726eb-b945-4b82-8755-a2fb2dc009bc')

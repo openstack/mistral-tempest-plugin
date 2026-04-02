@@ -31,6 +31,33 @@ class OpenStackActionsTestsV2(base.TestCase):
         _, self.wb = self.client.create_workbook(
             'openstack/action_collection_wb.yaml')
 
+    def tearDown(self):
+        for ex in self.client.executions:
+            try:
+                self.client.delete_obj('executions', ex, force=True)
+            except Exception:
+                pass
+
+        self.client.executions = []
+
+        for ex in self.admin_client.executions:
+            try:
+                self.admin_client.delete_obj('executions', ex, force=True)
+            except Exception:
+                pass
+
+        self.admin_client.executions = []
+
+        for wf in self.client.workflows:
+            try:
+                self.client.delete_obj('workflows', wf)
+            except Exception:
+                pass
+
+        self.client.workflows = []
+
+        super(OpenStackActionsTestsV2, self).tearDown()
+
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('9a999fc2-a089-4375-bc69-e1ed85b17a82')
     def test_nova_actions(self):
