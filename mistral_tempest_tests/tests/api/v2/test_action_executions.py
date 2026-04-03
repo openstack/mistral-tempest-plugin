@@ -48,6 +48,22 @@ class ActionExecutionTestsV2(base.TestCase):
 
         self.client.action_executions = []
 
+        for ex in self.client.executions:
+            try:
+                self.client.delete_obj('executions', ex, force=True)
+            except Exception:
+                pass
+
+        self.client.executions = []
+
+        for wf in self.client.workflows:
+            try:
+                self.client.delete_obj('workflows', wf)
+            except Exception:
+                pass
+
+        self.client.workflows = []
+
         super(ActionExecutionTestsV2, self).tearDown()
 
     @decorators.attr(type='sanity')
@@ -77,6 +93,21 @@ class ActionExecutionTestsV2(base.TestCase):
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('cd36ea00-7e22-4c3d-90c3-fb441b93cf12')
     def test_output_appear_in_response_only_when_needed(self):
+        resp, body = self.client.create_action_execution(
+            {
+                'name': 'std.echo',
+                'input': '{"output": "Hello, Mistral!"}',
+                'params': '{"save_result": true}'
+            }
+        )
+
+        self.assertEqual(201, resp.status)
+
+        self.client.wait_execution_success(
+            body,
+            url='action_executions'
+        )
+
         resp, body = self.client.get_list_obj('action_executions')
 
         self.assertEqual(200, resp.status)
@@ -101,6 +132,9 @@ class ActionExecutionTestsV2(base.TestCase):
         self.assertEqual(201, resp.status)
         resp, body = self.client.create_execution(wf_name)
         self.assertEqual(201, resp.status)
+
+        self.client.wait_execution_success(body)
+
         resp, body = self.client.get_list_obj('tasks')
         self.assertEqual(200, resp.status)
         task_id = body['tasks'][0]['id']

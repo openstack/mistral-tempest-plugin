@@ -39,13 +39,19 @@ class ExecutionTestsV2(base.TestCase):
         self.reverse_wf = reverse_wfs[0]
 
     def tearDown(self):
-        for wf in self.client.workflows:
-            self.client.delete_obj('workflows', wf)
-        self.client.workflows = []
-
         for ex in self.client.executions:
-            self.client.delete_obj('executions', ex, force=True)
+            try:
+                self.client.delete_obj('executions', ex, force=True)
+            except Exception:
+                pass
         self.client.executions = []
+
+        for wf in self.client.workflows:
+            try:
+                self.client.delete_obj('workflows', wf)
+            except Exception:
+                pass
+        self.client.workflows = []
 
         super(ExecutionTestsV2, self).tearDown()
 
