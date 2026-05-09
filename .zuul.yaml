@@ -15,8 +15,9 @@
     vars: &base_vars
       tox_envlist: all
       tempest_test_regex: mistral
+      tempest_plugins:
+        - mistral-tempest-plugin
       devstack_localrc:
-        TEMPEST_PLUGINS: "/opt/stack/mistral-tempest-plugin"
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
       devstack_services:
