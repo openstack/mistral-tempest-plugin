@@ -21,10 +21,8 @@
         SWIFT_HASH: secrethash
         MYSQL_ROOT_PW: secretdatabase
       devstack_services:
-        heat: true
         h-api: true
         h-api-cfn: true
-        h-api-cw: true
         h-eng: true
         s-proxy: true
         s-object: true
