@@ -13,9 +13,12 @@
 #    limitations under the License.
 
 from oslo_serialization import jsonutils
+from tempest import config
 from tempest.lib import decorators
 
 from mistral_tempest_tests.tests import base
+
+CONF = config.CONF
 
 
 class OpenStackActionsTestsV2(base.TestCase):
@@ -61,6 +64,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('9a999fc2-a089-4375-bc69-e1ed85b17a82')
     def test_nova_actions(self):
+        if not CONF.service_available.nova:
+            raise self.skipException("Nova is not available")
         wf_name = self.wb['name'] + '.nova'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
@@ -88,6 +93,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('fde681b8-3e1b-4172-a4b8-2fcac1f070d9')
     def test_heat_actions(self):
+        if not getattr(CONF.service_available, 'heat', True):
+            raise self.skipException("Heat is not available")
         wf_name = self.wb['name'] + '.heat'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
@@ -98,6 +105,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('5981360d-f336-45ca-9d38-799c7a8ade26')
     def test_glance_actions(self):
+        if not CONF.service_available.glance:
+            raise self.skipException("Glance is not available")
         wf_name = self.wb['name'] + '.glance'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
@@ -108,6 +117,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('a1f71a72-3681-4d32-aad9-117068717b33')
     def test_cinder_actions(self):
+        if not CONF.service_available.cinder:
+            raise self.skipException("Cinder is not available")
         wf_name = self.wb['name'] + '.cinder'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
@@ -118,6 +129,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('586dd973-fc65-40e2-9a85-31418b22473a')
     def test_neutron_actions(self):
+        if not CONF.service_available.neutron:
+            raise self.skipException("Neutron is not available")
         wf_name = self.wb['name'] + '.neutron'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
@@ -128,6 +141,8 @@ class OpenStackActionsTestsV2(base.TestCase):
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('985c1051-cf2e-4fd0-8ceb-a9b8110597a1')
     def test_swift_actions(self):
+        if not CONF.service_available.swift:
+            raise self.skipException("Swift is not available")
         wf_name = self.wb['name'] + '.swift'
         _, execution = self.client.create_execution(wf_name)
         self.client.wait_execution_success(execution)
