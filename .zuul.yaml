@@ -17,18 +17,10 @@
       tempest_test_regex: mistral
       tempest_plugins:
         - mistral-tempest-plugin
-      devstack_localrc:
-        SWIFT_HASH: secrethash
-        MYSQL_ROOT_PW: secretdatabase
       devstack_services:
         h-api: true
         h-api-cfn: true
         h-eng: true
-        s-proxy: true
-        s-object: true
-        s-container: true
-        s-account: true
-        tempest: true
       devstack_plugins:
         mistral: https://opendev.org/openstack/mistral
         heat: https://opendev.org/openstack/heat
