@@ -31,7 +31,7 @@ classifiers = [
 Repository = "https://opendev.org/openstack/mistral-tempest-plugin"
 
 [tool.setuptools.packages.find]
-include = ["mistral_tempest_tests"]
+include = ["mistral_tempest_tests*"]
 
 [project.entry-points."tempest.test_plugins"]
 mistral_test = "mistral_tempest_tests.plugin:MistralTempestPlugin"
