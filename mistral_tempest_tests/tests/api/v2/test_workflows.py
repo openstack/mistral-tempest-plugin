@@ -12,6 +12,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import testtools
+
 from oslo_concurrency.fixture import lockutils
 from oslo_serialization import jsonutils
 from tempest.lib import decorators
@@ -408,6 +410,7 @@ class WorkflowTestsV2(base.TestCase):
 
     @decorators.attr(type='negative')
     @decorators.idempotent_id('1cb929e6-d375-4dcb-ab7c-73aa205af896')
+    @testtools.skip('https://bugs.launchpad.net/mistral/+bug/2147178')
     def test_delete_wf_with_trigger_associate_in_other_tenant(self):
         self.useFixture(lockutils.LockFixture('mistral-workflow'))
         tr_name = 'trigger'
