@@ -19,11 +19,3 @@ ServiceAvailableGroup = [cfg.BoolOpt('mistral',
                                      default=True,
                                      help="Whether or not Mistral is expected"
                                           " to be available")]
-
-mistral_api_group = cfg.OptGroup(name="mistral_api",
-                                 title="Mistral Api Service Options")
-
-MistralApiGroup = [cfg.BoolOpt("service_api_supported",
-                               default=False,
-                               help="Whether or not services api "
-                                    "is available")]
