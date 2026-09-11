@@ -50,6 +50,12 @@
     parent: mistral-devstack-tempest-base
 
 - job:
+    name: mistral-devstack-2026-2
+    parent: mistral-devstack
+    nodeset: openstack-single-node-noble
+    override-checkout: stable/2026.2
+
+- job:
     name: mistral-devstack-2026-1
     parent: mistral-devstack
     nodeset: openstack-single-node-noble
@@ -99,6 +105,7 @@
     check:
       jobs:
         - mistral-devstack
+        - mistral-devstack-2026-2
         - mistral-devstack-2026-1
         - mistral-devstack-2025-2
         - mistral-devstack-2025-1
