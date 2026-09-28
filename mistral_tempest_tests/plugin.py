@@ -34,14 +34,9 @@ class MistralTempestPlugin(plugins.TempestPlugin):
         config.register_opt_group(conf,
                                   config.service_available_group,
                                   mistral_config.ServiceAvailableGroup)
-        config.register_opt_group(conf,
-                                  mistral_config.mistral_api_group,
-                                  mistral_config.MistralApiGroup)
 
     def get_opt_lists(self):
         return [
             (config.service_available_group.name,
              mistral_config.ServiceAvailableGroup),
-            (mistral_config.mistral_api_group.name,
-             mistral_config.MistralApiGroup),
         ]

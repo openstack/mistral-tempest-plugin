@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``[mistral_api] service_api_supported`` option has been removed.
