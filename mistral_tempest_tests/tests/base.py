@@ -34,6 +34,11 @@ class TestCase(test.BaseTestCase):
         if not CONF.service_available.mistral:
             raise cls.skipException("Mistral support is required.")
 
+    @classmethod
+    def setup_credentials(cls):
+        cls.set_network_resources()
+        super(TestCase, cls).setup_credentials()
+
     def setUp(self):
         """Client authentication.
 
@@ -72,6 +77,12 @@ class TestCase(test.BaseTestCase):
 
 
 class TestCaseAdvanced(TestCase):
+
+    @classmethod
+    def setup_credentials(cls):
+        cls.set_network_resources(network=True, subnet=True, router=True,
+                                  dhcp=True)
+        super(TestCaseAdvanced, cls).setup_credentials()
 
     def setUp(self):
         super(TestCaseAdvanced, self).setUp()
