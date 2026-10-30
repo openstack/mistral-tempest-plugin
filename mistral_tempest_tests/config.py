@@ -19,3 +19,14 @@ ServiceAvailableGroup = [cfg.BoolOpt('mistral',
                                      default=True,
                                      help="Whether or not Mistral is expected"
                                           " to be available")]
+
+mistral_group = cfg.OptGroup(name='mistral',
+                             title='Mistral test options')
+
+MistralGroup = [
+    cfg.URIOpt('http_server_url',
+               schemes=('http', 'https'),
+               help='Base URL of an HTTP server publishing the content of '
+                    'playbooks/tempest/files/http, used by the std.http '
+                    'tests. These tests are skipped when not set.'),
+]

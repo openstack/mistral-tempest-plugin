@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``[mistral] http_server_url`` option sets the base URL of an HTTP
+    server. The ``std.http`` action tests use it instead of external websites,
+    and are skipped when it is not set.

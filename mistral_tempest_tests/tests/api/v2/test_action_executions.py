@@ -14,12 +14,15 @@
 
 from oslo_log import log as logging
 from oslo_serialization import jsonutils
+from tempest import config
 from tempest.lib import decorators
 from tempest.lib import exceptions
+import testtools
 
 from mistral_tempest_tests.tests import base
 
 
+CONF = config.CONF
 LOG = logging.getLogger(__name__)
 
 
@@ -35,6 +38,10 @@ class ActionExecutionTestsV2(base.TestCase):
                 'input': '{"output": "Hello, Mistral!"}'
             }
         )
+
+    @property
+    def _http_server_url(self):
+        return CONF.mistral.http_server_url.rstrip('/')
 
     def tearDown(self):
         for action_ex in self.client.action_executions:
@@ -157,13 +164,15 @@ class ActionExecutionTestsV2(base.TestCase):
         action_execution = body['action_executions'][0]
         self.assertNotIn("output", action_execution)
 
+    @testtools.skipUnless(CONF.mistral.http_server_url,
+                          'HTTP server URL is not configured')
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('dc76aeda-9243-45cf-bfd2-141d3af8b28b')
     def test_run_action_std_http(self):
         resp, body = self.client.create_action_execution(
             {
                 'name': 'std.http',
-                'input': '{"url": "http://wiki.openstack.org"}'
+                'input': '{"url": "%s/index.html"}' % self._http_server_url
             }
         )
 
@@ -171,13 +180,15 @@ class ActionExecutionTestsV2(base.TestCase):
         output = jsonutils.loads(body['output'])
         self.assertTrue(output['result']['status'] in range(200, 307))
 
+    @testtools.skipUnless(CONF.mistral.http_server_url,
+                          'HTTP server URL is not configured')
     @decorators.attr(type='sanity')
     @decorators.idempotent_id('befa9b1c-01a4-41bc-b060-88cb1b147dfb')
     def test_run_action_std_http_error(self):
         resp, body = self.client.create_action_execution(
             {
                 'name': 'std.http',
-                'input': '{"url": "http://www.google.ru/not-found-test"}'
+                'input': '{"url": "%s/not-found"}' % self._http_server_url
             }
         )
 
@@ -185,6 +196,8 @@ class ActionExecutionTestsV2(base.TestCase):
         output = jsonutils.loads(body['output'])
         self.assertEqual(404, output['result']['status'])
 
+    @testtools.skipUnless(CONF.mistral.http_server_url,
+                          'HTTP server URL is not configured')
     @decorators.attr(type='sanity')
     @decorators.related_bug('1667415')
     @decorators.idempotent_id('3c73de7a-4af0-4657-90d6-d7ebd3c7da18')
@@ -193,7 +206,7 @@ class ActionExecutionTestsV2(base.TestCase):
             {
                 'name': 'std.http',
                 'input':
-                    '{"url": "https://httpbingo.org/encoding/utf8"}'
+                    '{"url": "%s/utf8.html"}' % self._http_server_url
             }
         )
 
