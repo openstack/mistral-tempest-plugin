@@ -26,7 +26,7 @@ mistral_group = cfg.OptGroup(name='mistral',
 MistralGroup = [
     cfg.URIOpt('http_server_url',
                schemes=('http', 'https'),
-               help='Base URL of an HTTP server publishing the content of '
-                    'playbooks/tempest/files/http, used by the std.http '
-                    'tests. These tests are skipped when not set.'),
+               help='Base URL of an HTTP server hosting the std.http test '
+                    'content (index.html, utf8.html). The std.http tests '
+                    'are skipped when not set.'),
 ]
