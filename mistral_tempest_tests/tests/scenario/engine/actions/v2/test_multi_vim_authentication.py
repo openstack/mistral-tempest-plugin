@@ -17,7 +17,6 @@ from keystoneclient import service_catalog as ks_service_catalog
 from oslo_serialization import jsonutils
 from oslo_utils import uuidutils
 from tempest.lib import decorators
-from urllib.parse import urlparse
 
 from mistral_tempest_tests.tests import base
 
@@ -25,55 +24,58 @@ from mistral_tempest_tests.tests import base
 class MultiVimActionsTests(base.TestCase):
     _service = 'workflowv2'
 
+    def _create_network(self, client):
+        name = 'multi_vim_test_net_{}'.format(
+            uuidutils.generate_uuid()[:8])
+        result = _execute_action(
+            client,
+            {'name': 'neutron.create_network',
+             'input': {'body': {'network': {'name': name}}}}
+        )
+        net_id = jsonutils.loads(result['output'])['result']['network']['id']
+        self.addCleanup(
+            _execute_action, client,
+            {'name': 'neutron.delete_network', 'input': {'network': net_id}}
+        )
+
+        return name, net_id
+
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('dadc9960-9c03-41a9-9a9d-7e97d527e6dd')
-    @decorators.skip_because(bug="1964344")
     def test_multi_vim_support_target_headers(self):
         client_1 = self.alt_client
         client_2 = self.client
 
-        # Create stack with client2.
-        result = _execute_action(client_2, _get_create_stack_request())
-        stack_id = str(
-            jsonutils.loads(result['output'])['result']['stack']['id']
+        name, net_id = self._create_network(client_2)
+
+        result = _execute_action(client_1, _get_list_networks_request(name))
+        self.assertEmpty(
+            jsonutils.loads(result['output'])['result']['networks']
         )
 
-        # List stacks with client1, and assert that there is no stack.
-        result = _execute_action(client_1, _get_list_stack_request())
-        self.assertEmpty(jsonutils.loads(result['output'])['result'])
-
-        # List stacks with client1, but with the target headers of client2,
-        # and assert the created stack is there.
         result = _execute_action(
             client_1,
-            _get_list_stack_request(),
+            _get_list_networks_request(name),
             extra_headers=_extract_target_headers_from_client(client_2)
         )
-        self.assertEqual(
-            stack_id,
-            str(jsonutils.loads(result['output'])['result'][0]['id'])
-        )
+        networks = jsonutils.loads(result['output'])['result']['networks']
+        self.assertEqual([net_id], [n['id'] for n in networks])
 
     @decorators.attr(type='openstack')
     @decorators.idempotent_id('bc0e9b99-62b0-4d96-95c9-016a3f69b02a')
-    @decorators.skip_because(bug="1736685")
     def test_multi_vim_support_target_headers_and_service_catalog(self):
         client_1 = self.alt_client
         client_2 = self.client
 
-        # List stacks with client1, but with the target headers of client2,
-        # and additionally with an invalid X-Target-Service-Catalog.
         extra_headers = _extract_target_headers_from_client(client_2)
 
-        # Use ServiceCatalog to eliminate differences between keystone v2 and
-        # v3.
         token_data = client_2.auth_provider.auth_data[1]
         service_catalog = ks_service_catalog.ServiceCatalog.factory(
             token_data
         ).get_data()
 
         for service in service_catalog:
-            if service['name'] == 'heat':
+            if service['type'] == 'network':
                 for ep in service['endpoints']:
                     if 'publicURL' in ep:
                         ep['publicURL'] = "invalid"
@@ -87,28 +89,22 @@ class MultiVimActionsTests(base.TestCase):
         else:
             token_data['serviceCatalog'] = service_catalog
 
-        invalid_service_catalog = {
-            "X-Target-Service-Catalog": base64.b64encode(
-                jsonutils.dumps(token_data)
-            )
-        }
-        extra_headers.update(invalid_service_catalog)
+        extra_headers["X-Target-Service-Catalog"] = base64.b64encode(
+            jsonutils.dumps(token_data).encode()
+        ).decode()
         result = _execute_action(
             client_1,
-            _get_list_stack_request(),
+            _get_list_networks_request(),
             extra_headers=extra_headers
         )
 
-        # Assert that the invalid catalog was used.
-        self.assertIn("Invalid URL", result['output'])
+        self.assertIn("Invalid URL", result["output"])
 
 
 def _extract_target_headers_from_client(client):
-    u = urlparse(client.auth_provider.auth_url)
-    v3_auth_url = '{}://{}/identity/v3/'.format(u.scheme, u.netloc)
     return {
         'X-Target-Auth-Token': client.token,
-        'X-Target-Auth-Uri': v3_auth_url,
+        'X-Target-Auth-Uri': client.auth_provider.auth_url,
         'X-Target-Project-Id': client.tenant_id,
         'X-Target-User-Id': client.user_id,
     }
@@ -125,20 +121,9 @@ def _execute_action(client, request, extra_headers=None):
     return result
 
 
-def _get_create_stack_request():
-    stack_name = 'multi_vim_test_stack_{}'.format(
-        uuidutils.generate_uuid()[:8])
+def _get_list_networks_request(name=None):
+    request = {'name': 'neutron.list_networks'}
+    if name:
+        request['input'] = {'name': name}
 
-    return {
-        'name': 'heat.stacks_create',
-        'input': {
-            'stack_name': stack_name,
-            "template": {"heat_template_version": "2013-05-23"}
-        }
-    }
-
-
-def _get_list_stack_request():
-    return {
-        'name': 'heat.stacks_list',
-    }
+    return request
